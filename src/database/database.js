@@ -9,23 +9,50 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
       throw err
     }else{
         console.log('Connected to the SQLite database.')
-        db.run(`CREATE TABLE user (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name text, 
-            email text UNIQUE, 
-            password text, 
-            CONSTRAINT email_unique UNIQUE (email)
-            )`,
+
+        const createTaskTable = 
+        `CREATE TABLE task (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name VARCHAR(50), 
+        description VARCHAR(100),
+        tag_id INTEGER NOT NULL,  
+        maked BIT NOT NULL
+        )`
+
+        const createTagTable = 
+        `
+        CREATE TABLE tag (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        name VARCHAR(15)
+        )
+        `
+
+        db.run(createTaskTable,
         (err) => {
             if (err) {
                 // Table already created
+            console.log('Failed to create task table.')
             }else{
                 // Table just created, creating some rows
-                var insert = 'INSERT INTO user (name, email, password) VALUES (?,?,?)'
-                db.run(insert, ["admin","admin@example.com", "admin123456"])
-                db.run(insert, ["user","user@example.com", "user123456"])
+                var insert = 'INSERT INTO task (name, description, tag_id, maked) VALUES (?,?,?,?)'
+                db.run(insert, ["Tarefa 1","Descrição tarefa 1", 1, 0])
+                db.run(insert, ["Tarefa 2","Descrição tarefa 2", 1, 0])
             }
-        });  
+        });
+
+        db.run(createTagTable,
+        (err) => {
+            if (err) {
+                // Table already created
+                console.log('Failed to create tag table.')
+        }else{
+                // Table just created, creating some rows
+                var insert = 'INSERT INTO tag (name) VALUES (?)'
+                db.run(insert, ["backend"]);
+                db.run(insert, ["frontend"]);
+            }
+        }
+        );
     }
 });
 
