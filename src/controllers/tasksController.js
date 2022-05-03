@@ -1,6 +1,8 @@
-var db = require("../database/database.js")
+const db = require("../database/database.js");
+const validator = require("../validators");
 
-exports.list = (req, res) => {
+
+list = (req, res) => {
   const sql = "select * from task"
   const params = []
 
@@ -15,8 +17,7 @@ exports.list = (req, res) => {
   // res.status(200).json([{ name: 'task 1'}, {name: 'task 2'}, {name: 'task 3'}])
 }
 
-exports.get = (req, res) => {
-  const id = req.params.id;
+get = (req, res) => {
   const sql = "SELECT * FROM task WHERE id = ?";
   const params = [req.params.id]
 
@@ -27,4 +28,27 @@ exports.get = (req, res) => {
     }
     res.status(200).json(row);
   });
+}
+
+store = (req, res) => {
+  const body = req.body;
+  let payload;
+
+  try {
+    payload = validator.createTaskValidator(body);
+  } catch (error) {
+    return res.status(400).json({message: error.message})
+  }
+
+  const insertSql = "INSERT INTO task (name, description, tag_id) VALUES (?,?,?)"
+
+  db.run(insertSql, [payload.name, payload.description, 1])
+
+  res.status(201).json(payload);
+}
+
+module.exports = {
+  list,
+  get,
+  store
 }

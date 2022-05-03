@@ -7,8 +7,9 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
       // Cannot open database
       console.error(err.message)
       throw err
+
     }else{
-        console.log('Connected to the SQLite database.')
+        console.log('\nConnected to the SQLite database.')
 
         const createTaskTable = 
         `CREATE TABLE task (
@@ -16,7 +17,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         name VARCHAR(50), 
         description VARCHAR(100),
         tag_id INTEGER NOT NULL,  
-        maked BIT NOT NULL
+        marked BIT NOT NULL DEFAULT 0
         )`
 
         const createTagTable = 
@@ -27,32 +28,13 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         )
         `
 
-        db.run(createTaskTable,
-        (err) => {
-            if (err) {
-                // Table already created
-            console.log('Failed to create task table.')
-            }else{
-                // Table just created, creating some rows
-                var insert = 'INSERT INTO task (name, description, tag_id, maked) VALUES (?,?,?,?)'
-                db.run(insert, ["Tarefa 1","Descrição tarefa 1", 1, 0])
-                db.run(insert, ["Tarefa 2","Descrição tarefa 2", 1, 0])
-            }
-        });
+        db.run(createTaskTable, (error) => {
+            if(error) console.log(error.message);
+        })
 
-        db.run(createTagTable,
-        (err) => {
-            if (err) {
-                // Table already created
-                console.log('Failed to create tag table.')
-        }else{
-                // Table just created, creating some rows
-                var insert = 'INSERT INTO tag (name) VALUES (?)'
-                db.run(insert, ["backend"]);
-                db.run(insert, ["frontend"]);
-            }
-        }
-        );
+        db.run(createTagTable, (error) => {
+            if(error) console.log(error.message);
+        })
     }
 });
 
