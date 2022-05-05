@@ -1,5 +1,4 @@
 const db = require("../database/database.js");
-const validator = require("../validators");
 
 list = () => {
     const query = "select * from task"
@@ -41,8 +40,6 @@ create = (payload) => {
         })
     })
 }
-
-
 
 module.exports = {
     list,
