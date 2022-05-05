@@ -11,22 +11,23 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
     }else{
         console.log('\nConnected to the SQLite database.')
 
-        const createTaskTable = 
-        `CREATE TABLE task (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name VARCHAR(50), 
-        description VARCHAR(100),
-        tag_id INTEGER NOT NULL,  
-        marked BIT NOT NULL DEFAULT 0
-        )`
-
         const createTagTable = 
         `
-        CREATE TABLE tag (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        name VARCHAR(15)
+        CREATE TABLE IF NOT EXISTS tag (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+        name VARCHAR(15) NOT NULL
         )
         `
+
+        const createTaskTable = 
+        `CREATE TABLE IF NOT EXISTS task (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        name VARCHAR(50) NOT NULL,
+        description VARCHAR(100) NOT NULL,
+        tag_id INTEGER NOT NULL,
+        marked BIT NOT NULL DEFAULT 0,
+        FOREIGN KEY (tag_id) REFERENCES tag (id)
+        )`
 
         db.run(createTaskTable, (error) => {
             if(error) console.log(error.message);

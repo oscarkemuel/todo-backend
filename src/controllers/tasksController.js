@@ -1,36 +1,22 @@
 const db = require("../database/database.js");
+const taskService = require("../services/taskService.js")
 const validator = require("../validators");
 
+list = async (req, res) => {
+  const tasks = await taskService.list();
 
-list = (req, res) => {
-  const sql = "select * from task"
-  const params = []
-
-  db.all(sql, params, (err, rows) => {
-      if (err) {
-        res.status(400).json({erro: { message: "Erro na listagem" }});
-        return;
-      }
-      res.status(200).json(rows);
-    });
-
-  // res.status(200).json([{ name: 'task 1'}, {name: 'task 2'}, {name: 'task 3'}])
+  return res.status(200).json(tasks);
 }
 
-get = (req, res) => {
-  const sql = "SELECT * FROM task WHERE id = ?";
-  const params = [req.params.id]
+get = async (req, res) => {
+  const id = req.params.id;
 
-  db.all(sql, params, (err, row) => {
-    if (err) {
-      res.status(400).json({erro: { message: "Erro ao buscar" }});
-      return;
-    }
-    res.status(200).json(row);
-  });
+  const task = await taskService.getById(id);
+
+  return res.status(200).json(task);
 }
 
-store = (req, res) => {
+store = async (req, res) => {
   const body = req.body;
   let payload;
 
@@ -40,11 +26,13 @@ store = (req, res) => {
     return res.status(400).json({message: error.message})
   }
 
-  const insertSql = "INSERT INTO task (name, description, tag_id) VALUES (?,?,?)"
+  const taskIsCreated = await taskService.create(payload);
 
-  db.run(insertSql, [payload.name, payload.description, 1])
+  if(taskIsCreated) {
+    return res.status(201).json(payload);
+  }
 
-  res.status(201).json(payload);
+  return res.status(400);
 }
 
 module.exports = {
