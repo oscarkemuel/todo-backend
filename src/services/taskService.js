@@ -24,7 +24,7 @@ getById = async (id) => {
 create = async (payload) => {
     let data = null;
     try {
-        data = await taskRepository.createTaks(payload.name, payload.description, payload.tag);
+        data = await taskRepository.createTask(payload.name, payload.description, payload.tag);
     } catch(err){
         console.log(err);
     }

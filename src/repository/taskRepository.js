@@ -1,6 +1,6 @@
 const db = require("../database/initializer.js");
 
-createTaks = (name, description, tag) => {
+createTask = (name, description, tag) => {
     const query = "INSERT INTO task (name, description, tag_id) VALUES (?,?,?)"
     const params = [name, description, tag];
 
@@ -14,5 +14,5 @@ createTaks = (name, description, tag) => {
 }
 
 module.exports = {
-    createTaks
+    createTask
 }
