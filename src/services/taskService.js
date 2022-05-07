@@ -1,4 +1,4 @@
-const db = require("../database/database.js");
+const db = require("../database/initializer.js");
 
 list = () => {
     const query = "select * from task"
