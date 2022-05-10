@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/server.js",
-    "dev": "nodemon --inspect ./bin/server.js"
+    "dev": "nodemon --inspect ./bin/server.js",
+    "test": "jest --forceExit"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -16,6 +17,8 @@
     "sqlite3": "^5.0.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "jest": "^28.1.0",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.3"
   }
 }
