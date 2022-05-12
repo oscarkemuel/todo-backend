@@ -1,69 +1,73 @@
-const db = require("../database/initializer.js");
-const taskService = require("../services/taskService.js")
-const tagService = require("../services/tagService.js")
-const validator = require("../validators");
+import TaskService from "../services/taskService.js";
+import TagService from "../services/tagService.js";
+import { createTaskValidator } from "../validators";
 
 const SERVER_ERROR_MESSAGE = "Sorry! An error happened while processing your request";
 
-list = async (req, res) => {
-  const tasks = await taskService.list();
-  if(tasks === null){
-    return res.status(500).json(SERVER_ERROR_MESSAGE);
+export default class TaskController {
+  taskService;
+  tagService;
+
+  constructor() {
+    this.taskService = new TaskService();
+    this.tagService = new TagService();
   }
 
-  return res.status(200).json(tasks);
-}
+  async list(req, res){
+    const tasks = await this.taskService.list();
 
-get = async (req, res) => {
-  const id = req.params.id;
+    if(tasks === null){
+      return res.status(500).json(SERVER_ERROR_MESSAGE);
+    }
 
-  const task = await taskService.getById(id);
-  if(task === null){
-    return res.status(500).json(SERVER_ERROR_MESSAGE);
+    return res.status(200).json(tasks);
   }
 
-  return res.status(200).json(task);
-}
+  async get(req, res){
+    const id = req.params.id;
 
-store = async (req, res) => {
-  const body = req.body;
-  let payload;
+    const task = await taskService.getById(id);
+    if(task === null){
+      return res.status(500).json(SERVER_ERROR_MESSAGE);
+    }
 
-  try {
-    payload = validator.createTaskValidator(body);
-  } catch (error) {
-    return res.status(400).json({message: error.message})
+    return res.status(200).json(task);
   }
 
-  let tag;
+  async store(req, res){
+    const body = req.body;
+    let payload;
 
-  tag = await tagService.getByName(payload.tag);
+    try {
+      payload = createTaskValidator(body);
+    } catch (error) {
+      return res.status(400).json({message: error.message})
+    }
 
-  if(tag === undefined) {
-    await tagService.create(payload.tag);
+    let tag;
 
     tag = await tagService.getByName(payload.tag);
+
+    if(tag === undefined) {
+      await tagService.create(payload.tag);
+
+      tag = await tagService.getByName(payload.tag);
+    }
+
+    const taskIsCreated = await taskService.create({ 
+      name: payload.name,
+      description: payload.description,
+      tag: tag.id
+    });
+
+    if(taskIsCreated === null){
+      return res.status(500).json(SERVER_ERROR_MESSAGE);
+    }
+
+    if(taskIsCreated) {
+      return res.status(201).json(payload);
+    }
+
+    return res.status(400);
   }
-
-  const taskIsCreated = await taskService.create({ 
-    name: payload.name,
-    description: payload.description,
-    tag: tag.id
-  });
-
-  if(taskIsCreated === null){
-    return res.status(500).json(SERVER_ERROR_MESSAGE);
-  }
-
-  if(taskIsCreated) {
-    return res.status(201).json(payload);
-  }
-
-  return res.status(400);
-}
-
-module.exports = {
-  list,
-  get,
-  store
 }

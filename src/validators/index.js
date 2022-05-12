@@ -1,4 +1,4 @@
-createTaskValidator = (body) => {
+export const createTaskValidator = (body) => {
     const { name, description, tag } = body;
 
     if(!name) throw new Error("Name is required");
@@ -6,8 +6,4 @@ createTaskValidator = (body) => {
     if(!tag) throw new Error("Tag is required");
 
     return body;
-}
-
-module.exports = {
-    createTaskValidator
 }

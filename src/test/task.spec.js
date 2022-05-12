@@ -1,6 +1,6 @@
-const request = require('supertest');
-var app = require('../app.js');
-const test = require('jest');
+import request from 'supertest';
+import app from '../app.js'
+import test from 'jest';
 
 beforeAll(() => {
     process.env.NODE_ENV = 'test';

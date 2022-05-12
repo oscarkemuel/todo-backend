@@ -1,38 +1,45 @@
-const genericRepository = require("../repository/genericRepository.js");
-const taskRepository = require("../repository/taskRepository.js");
+import GenericRepository from "../repository/genericRepository.js";
+import TaskRepository from "../repository/taskRepository.js"
 
-list = async () => {
-   let data = null;
-   try {
-       data = await genericRepository.list("task");
-   } catch (err){
-       console.log(err);
-   }
-   return data;
-}
+export default class TaskService {
+    genericRepository;
+    taskRepository;
 
-getById = async (id) => {
-    let data = null;
-    try {
-        data = await genericRepository.getById("task", id);
-    } catch(err){
-        console.log(err);
+    constructor() {
+        this.genericRepository = new GenericRepository();
+        this.taskRepository = new TaskRepository();
     }
-    return data;
-}
 
-create = async (payload) => {
-    let data = null;
-    try {
-        data = await taskRepository.createTask(payload.name, payload.description, payload.tag);
-    } catch(err){
-        console.log(err);
+    async list(){
+        let data = null;
+        try {
+            data = await this.genericRepository.list("task");
+        } catch (err){
+            console.log(err);
+        }
+        return data;
     }
-    return data;
-}
 
-module.exports = {
-    list,
-    getById,
-    create
+    async getById(id){
+        let data = null;
+        
+        try {
+            data = await this.genericRepository.getById("task", id);
+        } catch(err){
+            console.log(err);
+        }
+        return data;
+    }
+
+    async create(payload) {
+        let data = null;
+
+        try {
+            data = await this.taskRepository.createTask(payload.name, payload.description, payload.tag);
+        } catch(err){
+            console.log(err);
+        }
+
+        return data;
+    }
 }

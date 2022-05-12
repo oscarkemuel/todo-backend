@@ -2,7 +2,7 @@ var sqlite3 = require('sqlite3').verbose()
 
 const DBSOURCE = process.env.NODE_ENV === 'test' ? ':memory:' : 'db.sqlite'
 
-let db = new sqlite3.Database(DBSOURCE, (err) => {
+export let db = new sqlite3.Database(DBSOURCE, (err) => {
     if (err) {
       // Cannot open database
       console.error(err.message);
@@ -50,6 +50,3 @@ let createDbTables = () => {
     createTasksTable();
     createTagsTable();
 }
-
-
-module.exports = db
