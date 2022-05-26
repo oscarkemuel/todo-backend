@@ -1329,6 +1329,11 @@
   "resolved" "https://registry.npmjs.org/crypto-random-string/-/crypto-random-string-2.0.0.tgz"
   "version" "2.0.0"
 
+"cryptojs@^2.5.3":
+  "integrity" "sha1-kJVH7PFbrEVuJ1RZs58u9F1/y7k="
+  "resolved" "https://registry.npmjs.org/cryptojs/-/cryptojs-2.5.3.tgz"
+  "version" "2.5.3"
+
 "css-parse@1.0.4":
   "integrity" "sha1-OLBQP7+dqfVOnB29pg4UXHcRe90="
   "resolved" "https://registry.npmjs.org/css-parse/-/css-parse-1.0.4.tgz"

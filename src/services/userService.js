@@ -1,3 +1,4 @@
+const crypto = require("cryptojs");
 const genericRepository = require("../repository/genericRepository.js");
 const userRepository = require("../repository/userRepository.js");
 
@@ -22,20 +23,21 @@ login = async (payload) => {
 
     return validatePassword(payload.password, user.password)?  
         {message: "logged in", data: userData}: wrongPasswordMessage;
-
 }
 
-// Todo: finish it
-validatePassword = () => {
-    return true;
+validatePassword = (typedPassword, databasePassword) => {
+    return encriptPassword(typedPassword) === databasePassword;
 }
 
+encryptPassword = (password) => {
+    return crypto.SHA3(password);
+}
 
 create = async (payload) => {
     let data = null;
     try {
-        // TODO: Implemente criptography
-        data = await userRepository.createUser(payload.name, payload.email, payload.password);
+        let password = encryptPassword(payload.password);
+        data = await userRepository.createUser(payload.name, payload.email, password);
     } catch(err){
         console.log(err);
     }
@@ -51,9 +53,7 @@ getUserByEmail = async (email) => {
         throw err;
     }
     return user;
-
 }
-
 
 module.exports = {
     login,
