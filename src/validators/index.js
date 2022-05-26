@@ -8,6 +8,12 @@ createTaskValidator = (body) => {
     return body;
 }
 
+// Todo
+userLoginValidator() = (body) => {
+    return body;
+}
+
 module.exports = {
-    createTaskValidator
+    createTaskValidator,
+    userLoginValidator
 }
