@@ -6,6 +6,4 @@ router.get('/', TasksController.list);
 router.get('/:id', TasksController.get);
 router.post('/', TasksController.store);
 
-
-
 module.exports = router;

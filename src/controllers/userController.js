@@ -12,4 +12,13 @@ login = async (req, res) => {
     }
   
     return res.status(200).json(response);
-  }
+}
+
+create = async (req, res) => {
+    console.log("receiving create request");
+    const body = req.body;
+    let payload = validator.userCreateValidator(body);
+    console.log(payload);
+    const response = await userService.create(payload);
+    return res.status(201).json(response);
+}

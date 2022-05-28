@@ -6,7 +6,7 @@ login = async (payload) => {
 
     let user = null;
     let userData = null;
-    let wrongPasswordMessage = {message = "wrong email / password", data: null}
+    let wrongPasswordMessage = {message : "wrong email / password", data: null}
 
     try {
         let user = await getUserByEmail(payload.email);
