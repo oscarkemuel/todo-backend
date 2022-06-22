@@ -1,6 +1,18 @@
 const crypto = require("cryptojs");
 const genericRepository = require("../repository/genericRepository.js");
 const userRepository = require("../repository/userRepository.js");
+const bcrypt = require('bcrypt');
+
+const Encrypt = {
+    cryptPassword: (password) =>
+        bcrypt.genSalt(10)
+        .then((salt => bcrypt.hash(password, salt)))
+        .then(hash => hash),
+
+    comparePassword: (password, hashPassword) =>
+        bcrypt.compare(password, hashPassword)
+        .then(resp => resp)
+}
 
 login = async (payload) => {
 
@@ -21,7 +33,7 @@ login = async (payload) => {
         return wrongPasswordMessage;
     }
 
-    return validatePassword(payload.password, user.password)?  
+    return await Encrypt.comparePassword(payload.password, user.password)?  
         {message: "logged in", data: userData}: wrongPasswordMessage;
 }
 
@@ -36,7 +48,7 @@ encryptPassword = (password) => {
 create = async (payload) => {
     let data = null;
     try {
-        let password = encryptPassword(payload.password);
+        let password = await Encrypt.cryptPassword(payload.password);
         data = await userRepository.createUser(payload.name, payload.email, password);
     } catch(err){
         console.log(err);

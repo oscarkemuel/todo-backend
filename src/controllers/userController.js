@@ -1,4 +1,4 @@
-const taskService = require("../services/userService.js");
+const userService = require("../services/userService.js");
 const validator = require("../validators");
 
 login = async (req, res) => {
@@ -17,8 +17,14 @@ login = async (req, res) => {
 create = async (req, res) => {
     console.log("receiving create request");
     const body = req.body;
-    let payload = validator.userCreateValidator(body);
-    console.log(payload);
+    console.log(body)
+    let payload = validator.userLoginValidator(body);
+    console.log(payload)
     const response = await userService.create(payload);
     return res.status(201).json(response);
+}
+
+module.exports = {
+    login,
+    create,
 }

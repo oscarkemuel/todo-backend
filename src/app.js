@@ -1,16 +1,18 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
 
-var indexRouter = require('./routes/index');
-var tasksRouter = require('./routes/tasksRoute');
-var usersRouter = require('./routes/userRoute');
+const indexRouter = require('./routes/index');
+const tasksRouter = require('./routes/tasksRoute');
+const usersRouter = require('./routes/userRoute');
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
+app.use(cors()) ;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
