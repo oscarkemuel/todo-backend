@@ -7,18 +7,24 @@ createTaskValidator = (body) => {
 }
 
 
-userLoginValidator = (body) => {
+userCreationValidator = (body) => {
    const { name, email, password } = body;
-   console.log("chegando no validador");
-   console.log(body);
-   
    if(!email) throw new Error("Email is required");
    if(!password) throw new Error("Password is required");
    if(!name) throw new Error("Name is required");
    return body;
 }
 
+
+userLoginValidator = (body) => {
+    const { email, password } = body;
+    if(!email) throw new Error("Email is required");
+    if(!password) throw new Error("Password is required");
+    return body;
+ }
+
 module.exports = {
     createTaskValidator,
-    userLoginValidator
+    userLoginValidator,
+    userCreationValidator 
 }

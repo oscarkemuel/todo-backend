@@ -1,4 +1,3 @@
-const crypto = require("cryptojs");
 const genericRepository = require("../repository/genericRepository.js");
 const userRepository = require("../repository/userRepository.js");
 const bcrypt = require('bcrypt');
@@ -21,7 +20,7 @@ login = async (payload) => {
     let wrongPasswordMessage = {message : "wrong email / password", data: null}
 
     try {
-        let user = await getUserByEmail(payload.email);
+        user = await getUserByEmail(payload.email);
         userData = {
             name: user.name,
             email: user.email
@@ -29,20 +28,11 @@ login = async (payload) => {
 
     } catch(err){
         // user doesn't exist with given email
-        console.log(err);
         return wrongPasswordMessage;
     }
 
-    return await Encrypt.comparePassword(payload.password, user.password)?  
+    return await  Encrypt.comparePassword(payload.password, user.password)?  
         {message: "logged in", data: userData}: wrongPasswordMessage;
-}
-
-validatePassword = (typedPassword, databasePassword) => {
-    return encriptPassword(typedPassword) === databasePassword;
-}
-
-encryptPassword = (password) => {
-    return crypto.SHA3(password);
 }
 
 create = async (payload) => {
