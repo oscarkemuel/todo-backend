@@ -7,6 +7,7 @@ const validator = require("../validators");
 const SERVER_ERROR_MESSAGE = "Sorry! An error happened while processing your request";
 const USER_NOT_FOUND_MESSAGE = "User not found";
 const USER_HEADER_NOT_FOUND_MESSAGE = "userId header is required";
+const TASK_CREATED_MESSAGE = "Task created";
 
 list = async (req, res) => {
   let userId = req.headers.userid;
@@ -70,13 +71,6 @@ store = async (req, res) => {
     tag = await tagService.getByName(payload.tag, userId);
   }
 
-  console.log({ 
-    name: payload.name,
-    description: payload.description,
-    tag: tag.id,
-    user_id: userId
-  })
-
   const taskIsCreated = await taskService.create({ 
     name: payload.name,
     description: payload.description,
@@ -89,7 +83,7 @@ store = async (req, res) => {
   }
 
   if(taskIsCreated) {
-    return res.status(201).json(payload);
+    return res.status(201).json({message: TASK_CREATED_MESSAGE});
   }
 
   return res.status(400);

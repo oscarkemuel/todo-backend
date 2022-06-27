@@ -29,7 +29,6 @@ login = async (payload) => {
 
     } catch(err){
         // user doesn't exist with given email
-        console.log(err);
         return wrongPasswordMessage;
     }
 

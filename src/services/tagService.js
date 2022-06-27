@@ -1,4 +1,5 @@
 const db = require("../database/initializer.js");
+const genericRepository = require("../repository/genericRepository.js");
 
 getByName = (name, userId) => {
     const query = "SELECT * FROM tag WHERE name = ? AND user_id = ?";
@@ -27,7 +28,18 @@ create = (name, userId) => {
     })
 }
 
+list = async (userId) => {
+    let data = null;
+    try {
+       data = await genericRepository.listByUser("tag", userId);
+    } catch (err){
+       console.log(err);
+    }
+   return data;
+}
+
 module.exports = {
     getByName,
-    create
+    create,
+    list
 }
