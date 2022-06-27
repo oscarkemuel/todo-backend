@@ -1,32 +1,28 @@
 const db = require("../database/initializer.js");
 const genericRepository = require("../repository/genericRepository.js");
+const tagRepository = require("../repository/tagRepository.js");
 
-getByName = (name, userId) => {
-    const query = "SELECT * FROM tag WHERE name = ? AND user_id = ?";
-    const params = [name, userId];
-
-    return new Promise(function(resolve, reject) {
-        db.get(query, params, function(err, row)  {
-            if(err) reject("Read error: " + err.message)
-            else {
-                resolve(row)
-            }
-        })
-    })
+getByName = async (name, userId) => {
+    let data = null;
+    try {
+        data = await genericRepository.getByFieldAndUser("tag", "name", name, userId);
+    } catch(err){
+        console.log(err);
+    }
+    return data;
 }
 
-create = (name, userId) => {
-    const query = "INSERT INTO tag (name, user_id) VALUES (?,?)";
-    const params = [name, userId];
 
-    return new Promise(function(resolve, reject) {
-        db.run(query, params,
-            function(err)  {
-                if(err) reject(err.message)
-                else    resolve(true)
-        })
-    })
+create = async (name, userId) => {
+    let data = null;
+    try {
+        data = await tagRepository.create(name, userId);
+    } catch(err){
+        console.log(err);
+    }
+    return data;
 }
+
 
 list = async (userId) => {
     let data = null;
