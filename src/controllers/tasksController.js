@@ -8,6 +8,7 @@ const SERVER_ERROR_MESSAGE = "Sorry! An error happened while processing your req
 const USER_NOT_FOUND_MESSAGE = "User not found";
 const USER_HEADER_NOT_FOUND_MESSAGE = "userId header is required";
 const TASK_CREATED_MESSAGE = "Task created";
+const TASK_NOT_FOUND_MESSAGE = "Task not found with given id";
 
 list = async (req, res) => {
   let userId = req.headers.userid;
@@ -38,6 +39,10 @@ get = async (req, res) => {
   const task = await taskService.getById(taskId, userId);
   if(task === null){
     return res.status(500).json(SERVER_ERROR_MESSAGE);
+  }
+
+  if(task === undefined) {
+    return res.status(404).json({message: TASK_NOT_FOUND_MESSAGE});
   }
 
   return res.status(200).json(task);

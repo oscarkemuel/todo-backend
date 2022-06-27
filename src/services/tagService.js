@@ -12,6 +12,15 @@ getByName = async (name, userId) => {
     return data;
 }
 
+getById = async (id, userId) => {
+    let data = null;
+    try {
+        data = await genericRepository.getByIdAndUser("tag", id, userId);
+    } catch(err){
+        console.log(err);
+    }
+    return data;
+}
 
 create = async (name, userId) => {
     let data = null;
@@ -37,5 +46,6 @@ list = async (userId) => {
 module.exports = {
     getByName,
     create,
-    list
+    list,
+    getById
 }

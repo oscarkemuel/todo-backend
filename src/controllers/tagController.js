@@ -4,6 +4,7 @@ const tagService = require("../services/tagService.js");
 const SERVER_ERROR_MESSAGE = "Sorry! An error happened while processing your request";
 const USER_NOT_FOUND_MESSAGE = "User not found";
 const USER_HEADER_NOT_FOUND_MESSAGE = "userId header is required";
+const NO_TAG_FOUND_MESSAGE = "Tag not found with given id";
 
 get = async (req, res) => {
     const tagId = req.params.id;
@@ -21,7 +22,11 @@ get = async (req, res) => {
         return res.status(500).json(SERVER_ERROR_MESSAGE);
     }
     
-    return res.status(200).json(task);
+    if(tag === undefined){
+        return res.status(404).json({message: NO_TAG_FOUND_MESSAGE});
+    }
+    
+    return res.status(200).json(tag);
 }
 
 list = async (req, res) => {
