@@ -1,8 +1,8 @@
 const db = require("../database/initializer.js");
 
-getByName = (name) => {
-    const query = "SELECT * FROM tag WHERE name = ?";
-    const params = [name]
+getByName = (name, userId) => {
+    const query = "SELECT * FROM tag WHERE name = ? AND user_id = ?";
+    const params = [name, userId];
 
     return new Promise(function(resolve, reject) {
         db.get(query, params, function(err, row)  {
@@ -14,9 +14,9 @@ getByName = (name) => {
     })
 }
 
-create = (name) => {
-    const query = "INSERT INTO tag (name) VALUES (?)"
-    const params = [name];
+create = (name, userId) => {
+    const query = "INSERT INTO tag (name, user_id) VALUES (?,?)";
+    const params = [name, userId];
 
     return new Promise(function(resolve, reject) {
         db.run(query, params,

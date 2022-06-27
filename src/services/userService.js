@@ -22,12 +22,14 @@ login = async (payload) => {
     try {
         user = await getUserByEmail(payload.email);
         userData = {
+            id: user.id,
             name: user.name,
             email: user.email
         }
 
     } catch(err){
         // user doesn't exist with given email
+        console.log(err);
         return wrongPasswordMessage;
     }
 
@@ -57,7 +59,32 @@ getUserByEmail = async (email) => {
     return user;
 }
 
+getUserById = async (id) => {
+    let user = null;
+    try {
+        user = await genericRepository.getById("user", id);
+    } catch(err){
+        console.log(err);
+        throw err;
+    }
+    return user;
+}
+
+userExistsWithId = async (id) => {
+    let user = null;
+    try {
+        user = await genericRepository.getById("user", id);
+    } catch(err){
+        console.log(err);
+        throw err;
+    }
+    return user !== null;
+}
+
 module.exports = {
     login,
-    create
+    create,
+    getUserByEmail,
+    getUserById,
+    userExistsWithId
 }

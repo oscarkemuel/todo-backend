@@ -21,7 +21,7 @@ userLoginValidator = (body) => {
     if(!email) throw new Error("Email is required");
     if(!password) throw new Error("Password is required");
     return body;
- }
+}
 
 module.exports = {
     createTaskValidator,

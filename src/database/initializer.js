@@ -23,8 +23,10 @@ let createTasksTable = () => {
         name VARCHAR(50) NOT NULL,
         description VARCHAR(100) NOT NULL,
         tag_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
         marked BIT NOT NULL DEFAULT 0,
-        FOREIGN KEY (tag_id) REFERENCES tag (id)
+        FOREIGN KEY (tag_id) REFERENCES tag (id),
+        FOREIGN KEY (user_id) REFERENCES user (id)
     )`;
 
     db.run(createTaskTable, (error) => {
@@ -37,7 +39,9 @@ let createTagsTable = () => {
 
     const createTagTable = `CREATE TABLE IF NOT EXISTS tag (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-        name VARCHAR(15) NOT NULL
+        name VARCHAR(15) NOT NULL,
+        user_id INTEGER NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES user (id)
     )`
 
     db.run(createTagTable, (error) => {
@@ -61,6 +65,7 @@ let createUserTable = () => {
 
 }
 
+/*
 let createTokenTable = () => {
     const createUserTable = `CREATE TABLE IF NOT EXISTS token (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -74,12 +79,14 @@ let createTokenTable = () => {
         if(error) console.log(error.message);
     })
 
+
 }
+*/
 
 let createDbTables = () => {
     createUserTable();
     createTasksTable();
-    createTokenTable();
+    //createTokenTable();
     createTagsTable();
 }
 

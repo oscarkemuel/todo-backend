@@ -1,6 +1,47 @@
 const db = require("../database/initializer.js");
 
-getById = (table, id) => {
+getByIdAndUser = (table, id, userId) => {
+    const query = `SELECT * FROM ${table} WHERE id = ? AND user_id = ?`;
+    const params = [id, userId];
+
+    return new Promise(function(resolve, reject) {
+        db.get(query, params, function(err, row)  {
+            if(err) reject("Read error: " + err.message)
+            else {
+                resolve(row)
+            }
+        })
+    })
+}
+
+getByFieldAndUser = (table, fieldName, fieldValue, userId) => {
+    const query = `SELECT * FROM ${table} WHERE ${fieldName} = ? AND user_id = ?`;
+    const params = [fieldValue, userId];
+
+    return new Promise(function(resolve, reject) {
+        db.get(query, params, function(err, row)  {
+            if(err) reject("Read error: " + err.message)
+            else {
+                resolve(row)
+            }
+        })
+    })
+}
+
+listByUser = (table, userId) => {
+    const query = `SELECT * FROM ${table} WHERE user_id = ?`;
+    return new Promise(function(resolve, reject) {
+        db.all(query, [userId], function(err, rows)  {
+            if(err) reject("Read error: " + err.message)
+            else {
+                resolve(rows)
+            }
+        })
+    }) 
+}
+
+
+getById = (table, id, userId) => {
     const query = `SELECT * FROM ${table} WHERE id = ?`;
     const params = [id];
 
@@ -40,8 +81,12 @@ list = (table) => {
     }) 
 }
 
+
 module.exports = {
     getById,
     getByField,
-    list
+    list,
+    getByIdAndUser,
+    getByFieldAndUser,
+    listByUser
 }

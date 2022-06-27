@@ -15,6 +15,10 @@ login = async (req, res) => {
 create = async (req, res) => {
     const body = req.body;
     let payload = validator.userCreationValidator(body);
+    let user = await userService.getUserByEmail(payload.email);
+    if(user != null){
+        return res.status(400).json({message: "User already exists"});
+    }
     const response = await userService.create(payload);
     return res.status(201).json(response);
 }

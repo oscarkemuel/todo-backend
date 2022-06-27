@@ -1,20 +1,20 @@
 const genericRepository = require("../repository/genericRepository.js");
 const taskRepository = require("../repository/taskRepository.js");
 
-list = async () => {
-   let data = null;
-   try {
-       data = await genericRepository.list("task");
-   } catch (err){
+list = async (userId) => {
+    let data = null;
+    try {
+       data = await genericRepository.listByUser("task", userId);
+    } catch (err){
        console.log(err);
-   }
+    }
    return data;
 }
 
-getById = async (id) => {
+getById = async (id, userId) => {
     let data = null;
     try {
-        data = await genericRepository.getById("task", id);
+        data = await genericRepository.getByIdAndUser("task", id, userId);
     } catch(err){
         console.log(err);
     }
@@ -24,7 +24,7 @@ getById = async (id) => {
 create = async (payload) => {
     let data = null;
     try {
-        data = await taskRepository.createTask(payload.name, payload.description, payload.tag);
+        data = await taskRepository.createTask(payload.name, payload.description, payload.tagId, payload.userId);
     } catch(err){
         console.log(err);
     }
