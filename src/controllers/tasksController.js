@@ -8,6 +8,8 @@ const SERVER_ERROR_MESSAGE = "Sorry! An error happened while processing your req
 const USER_NOT_FOUND_MESSAGE = "User not found";
 const USER_HEADER_NOT_FOUND_MESSAGE = "userId header is required";
 const TASK_CREATED_MESSAGE = "Task created";
+const TASK_UPDATED_MESSAGE = "Task updated";
+const TASK_DELETED_MESSAGE = "Task deleted";
 const TASK_NOT_FOUND_MESSAGE = "Task not found with given id";
 
 list = async (req, res) => {
@@ -94,8 +96,83 @@ store = async (req, res) => {
   return res.status(400);
 }
 
+update = async (req, res) => {
+  const body = req.body;
+  const taskId = req.params.id;
+  let userId = req.headers.userid;
+  let payload;
+
+  if(userId === undefined || userId === null){
+    return res.status(403).send({message: USER_HEADER_NOT_FOUND_MESSAGE});
+  }
+  userId = Number(userId);
+  if(!userService.userExistsWithId(userId)) {
+    return res.status(400).json({message: USER_NOT_FOUND_MESSAGE});
+  }
+  
+  try {
+    payload = validator.createTaskValidator(body);
+  } catch (error) {
+    return res.status(400).json({message: error.message})
+  }
+
+  let tag;
+  tag = await tagService.getByName(payload.tag, userId);
+
+  if(tag === undefined) {
+    await tagService.create(payload.tag, userId);
+    tag = await tagService.getByName(payload.tag, userId);
+  }
+
+  const task = await taskService.getById(taskId, userId);
+  if(task === undefined) {
+    return res.status(404).json({message: TASK_NOT_FOUND_MESSAGE});
+  }
+
+  const taskIsUpdated = await taskService.update({
+    name: payload.name,
+    description: payload.description,
+    tagId: tag.id,
+    userId: userId
+  }, taskId);
+
+  if(taskIsUpdated === null){
+    return res.status(500).json(SERVER_ERROR_MESSAGE);
+
+  } 
+  return res.status(200).json({message: TASK_UPDATED_MESSAGE});
+}
+
+
+deleteTask = async (req, res) => {
+  const taskId = req.params.id;
+  let userId = req.headers.userid;
+  if(userId === undefined || userId === null){
+    return res.status(403).send({message: USER_HEADER_NOT_FOUND_MESSAGE});
+  }
+  userId = Number(userId);
+  if(!userService.userExistsWithId(userId)) {
+    return res.status(400).json({message: USER_NOT_FOUND_MESSAGE});
+  }
+  const task = await taskService.getById(taskId, userId);
+  if(task === undefined) {
+    return res.status(404).json({message: TASK_NOT_FOUND_MESSAGE});
+  }
+    
+  const taskIsDeleted = await taskService.deleteTask(taskId, userId);
+  if(taskIsDeleted === null){
+    return res.status(500).json(SERVER_ERROR_MESSAGE);
+  }
+  if(taskIsDeleted) {
+    return res.status(200).json({message: TASK_DELETED_MESSAGE});
+  }
+  return res.status(400);
+}
+
 module.exports = {
   list,
   get,
-  store
+  store,
+  update,
+  deleteTask
 }

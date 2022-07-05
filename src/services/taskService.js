@@ -31,8 +31,30 @@ create = async (payload) => {
     return data;
 }
 
+update = async (payload, taskId) => {
+    let data = null;
+    try {
+        data = await taskRepository.updateTask(taskId, payload.name, payload.description, payload.tagId);
+    } catch(err){
+        console.log(err);
+    }
+    return data;
+}
+
+deleteTask = async (id) => {
+    let data = null;
+    try {
+        data = await taskRepository.deleteTask(id);
+    } catch(err){
+        console.log(err);
+    }
+    return data;
+}
+
 module.exports = {
     list,
     getById,
-    create
+    create,
+    update,
+    deleteTask
 }
