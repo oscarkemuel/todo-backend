@@ -39,8 +39,51 @@ deleteTask = (id) => {
     })
 }
 
+markTask = (id) => {
+    const query = "UPDATE task SET marked = 1 WHERE id = ?"
+    const params = [id];
+
+    return new Promise(function(resolve, reject) {
+        db.run(query, params,
+            function(err)  {
+                if(err) reject(err.message)
+                else    resolve(true)
+        })
+    })
+}
+
+unmarkTask = (id) => {
+    const query = "UPDATE task SET marked = 0 WHERE id = ?"
+    const params = [id];
+
+    return new Promise(function(resolve, reject) {
+        db.run(query, params,
+            function(err)  {
+                if(err) reject(err.message)
+                else    resolve(true)
+        })
+    })
+}
+
+isMarked = (id) => {
+    const query = "SELECT marked FROM task WHERE id = ?"
+    const params = [id];
+
+    return new Promise(function(resolve, reject) {
+        db.get(query, params,
+            function(err, row)  {
+                if(err) reject(err.message)
+                else    resolve(row.marked)
+        })
+    })
+}
+
+
 module.exports = {
     createTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    markTask,
+    unmarkTask,
+    isMarked
 }

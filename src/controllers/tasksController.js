@@ -11,6 +11,7 @@ const TASK_CREATED_MESSAGE = "Task created";
 const TASK_UPDATED_MESSAGE = "Task updated";
 const TASK_DELETED_MESSAGE = "Task deleted";
 const TASK_NOT_FOUND_MESSAGE = "Task not found with given id";
+const TASK_TOGGLED_MESSAGE = "Task marking sucessfully processed";
 
 list = async (req, res) => {
   let userId = req.headers.userid;
@@ -169,10 +170,34 @@ deleteTask = async (req, res) => {
   return res.status(400);
 }
 
+toggleTaskMarker = async (req, res) => {
+  const taskId = req.params.id;
+  let userId = req.headers.userid;
+  if(userId === undefined || userId === null){
+    return res.status(403).send({message: USER_HEADER_NOT_FOUND_MESSAGE});
+  }
+  userId = Number(userId);
+  if(!userService.userExistsWithId(userId)) {
+    return res.status(400).json({message: USER_NOT_FOUND_MESSAGE});
+  }
+  const task = await taskService.getById(taskId, userId);
+  if(task === undefined) {
+    return res.status(404).json({message: TASK_NOT_FOUND_MESSAGE});
+  }
+  const toggleSucessfull = await taskService.toggleTaskMarker(taskId, userId);
+  if(toggleSucessfull){
+    return res.status(200).json({message: TASK_TOGGLED_MESSAGE});
+  } else {
+    return res.status(500).json(SERVER_ERROR_MESSAGE);
+  }
+}
+
+
 module.exports = {
   list,
   get,
   store,
   update,
-  deleteTask
+  deleteTask,
+  toggleTaskMarker
 }

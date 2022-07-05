@@ -51,10 +51,43 @@ deleteTask = async (id) => {
     return data;
 }
 
+toggleTaskMarker = async (id) => {
+    let marked = null;
+    let data = null;
+    try {
+        marked = await taskRepository.markTask(id);
+    }
+    catch(err){
+        console.log(err);
+        return false;
+    }
+    if(marked){
+        try {
+            data = await taskRepository.unmarkTask(id);
+            return data;
+        }
+        catch(err){
+            console.log(err);
+            return false;
+        }
+    }
+    try {
+        data = await taskRepository.markTask(id);
+        return data;
+    }
+    catch(err){
+        console.log(err);
+        return false;
+    }
+}
+
+
+
 module.exports = {
     list,
     getById,
     create,
     update,
-    deleteTask
+    deleteTask,
+    toggleTaskMarker
 }
