@@ -52,32 +52,24 @@ deleteTask = async (id) => {
 }
 
 toggleTaskMarker = async (id) => {
-    let marked = null;
-    let data = null;
-    try {
-        marked = await taskRepository.markTask(id);
-    }
-    catch(err){
-        console.log(err);
-        return false;
-    }
-    if(marked){
+    const isMarked = await taskRepository.isMarked(id);
+
+    if(isMarked){
         try {
-            data = await taskRepository.unmarkTask(id);
+            const data = await taskRepository.unmarkTask(id);
             return data;
-        }
-        catch(err){
+        }catch(err){
             console.log(err);
             return false;
         }
-    }
-    try {
-        data = await taskRepository.markTask(id);
-        return data;
-    }
-    catch(err){
-        console.log(err);
-        return false;
+    } else {
+        try {
+            const data = await taskRepository.markTask(id);
+            return data;
+        }catch(err){
+            console.log(err);
+            return false;
+        }
     }
 }
 
